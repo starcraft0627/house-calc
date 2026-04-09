@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>💰 房東賺錢計算機</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; background-color: #f0f8ff; display: flex; justify-content: center; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 500px; width: 100%; border: 4px solid #4682b4; }
+        h2 { text-align: center; color: #2e5a88; margin-bottom: 20px; }
+        .step { background: #f9f9f9; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #d1d1d1; }
+        .step label { display: block; font-weight: bold; margin-bottom: 8px; color: #2e5a88; }
+        .row { display: flex; gap: 10px; align-items: center; }
+        input { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 10px; outline: none; font-size: 16px; }
+        input:focus { border-color: #4682b4; }
+        .result-box { margin-top: 25px; padding: 25px; background: #4682b4; color: white; border-radius: 20px; text-align: center; }
+        .result-value { font-size: 36px; font-weight: bold; display: block; margin-top: 10px; }
+        .hint { font-size: 12px; color: #888; margin-top: 5px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>💰 房東賺錢計算機</h2>
+    
+    <div class="step">
+        <label>1. 主建物面積 (m²)</label>
+        <input type="number" id="m_a" placeholder="請填主建物" oninput="run()">
+    </div>
+
+    <div class="step">
+        <label>2. 附屬建物/陽台 (m²)</label>
+        <input type="number" id="s_a" placeholder="請填附屬建物" oninput="run()">
+    </div>
+
+    <div class="step">
+        <label>3. 共有部分 (總面積 & 持分)</label>
+        <input type="number" id="p_t" placeholder="共有部分總面積" oninput="run()">
+        <div class="row" style="margin-top:8px;">
+            <input type="number" id="p_n" placeholder="分子" oninput="run()">
+            <span>/</span>
+            <input type="number" id="p_d" placeholder="分母" oninput="run()">
+        </div>
+    </div>
+
+    <div class="step">
+        <label>4. 扣除車位 (總面積 & 車位持分)</label>
+        <input type="number" id="c_t" placeholder="總面積 (通常同公設)" oninput="run()">
+        <div class="row" style="margin-top:8px;">
+            <input type="number" id="c_n" placeholder="車位分子" oninput="run()">
+            <span>/</span>
+            <input type="number" id="c_d" placeholder="分母" oninput="run()">
+        </div>
+    </div>
+
+    <div class="result-box">
+        <span>✨ 社會住宅評定有效坪數 ✨</span>
+        <span class="result-value" id="res">0.00 坪</span>
+    </div>
+    <p style="text-align:center; font-size:12px; color:#aaa; margin-top:15px;">註：主、附建物預設持分為 1/1</p>
+</div>
+
+<script>
+    function run() {
+        let ma = parseFloat(document.getElementById('m_a').value) || 0;
+        let sa = parseFloat(document.getElementById('s_a').value) || 0;
+        let pt = parseFloat(document.getElementById('p_t').value) || 0;
+        let pn = parseFloat(document.getElementById('p_n').value) || 0;
+        let pd = parseFloat(document.getElementById('p_d').value) || 1;
+        let ct = parseFloat(document.getElementById('c_t').value) || 0;
+        let cn = parseFloat(document.getElementById('c_n').value) || 0;
+        let cd = parseFloat(document.getElementById('c_d').value) || 1;
+        
+        // 公式：主 + 附 + (公設持分) - (車位持分)
+        let totalM2 = ma + sa + (pt * (pn/pd)) - (ct * (cn/cd));
+        let totalPing = totalM2 * 0.3025;
+        
+        document.getElementById('res').innerText = totalPing.toFixed(2) + " 坪";
+    }
+</script>
+</body>
+</html>
